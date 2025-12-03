@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="PatchTrackr.Core/PatchTrackr.Core.csproj" />
+  <Project Path="PatchTrackr.Web/PatchTrackr.Web.csproj" />
+</Solution>
