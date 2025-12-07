@@ -1,0 +1,177 @@
+﻿
+<script type="text/javascript" src="~/js/jquery-3.7.1.min.js"></script>
+<script type="text/javascript" src="~/js/popper.min.js"></script>
+<script type="text/javascript" src="~/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="~/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="~/lib/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+<script type="text/javascript" src="~/lib/@@coreui/coreui/dist/js/coreui.min.js"></script>
+<script type="text/javascript" src="~/js/toastr.min.js"></script>
+<script type="text/javascript" src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script type="text/javascript" src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+<script type="text/javascript" src="~/js/expressive.annotations.validate.min.js"></script>
+<script type="text/javascript" src="~/js/site.js" asp-append-version="true"></script>
+<script type="text/javascript" src="~/js/datatables.min.js"></script>
+<script type="text/javascript" src="~/js/fontawesome.min.js"></script>
+<script type="text/javascript" src="~/js/sweetalert2.min.js"></script>
+<script type="text/javascript" src="~/js/slimselect.min.js"></script>
+<script type="text/javascript" src="~/js/moment.min.js"></script>
+<script type="text/javascript" src="~/js/daterangepicker.min.js"></script>
+<script type="text/javascript" src="~/js/ag-grid-community.min.js"></script>
+<script type="text/javascript" src="~/js/ag-grid-enterprise.min.js"></script>
+<script type="text/javascript" src="~/js/ag-grid-helper.js" asp-append-version="true"></script>
+<script type="text/javascript" src="~/js/apexcharts.js"></script>
+<script type="text/javascript" src="~/js/echarts.min.js"></script>
+<script type="text/javascript" src="~/js/Sortable.min.js"></script>
+<script type="text/javascript" src="~/js/flatpickr.min.js"></script>
+
+<!-- Global setup for jquery's ajax -->
+<script type="text/javascript">
+    $.ajaxSetup({
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    });
+</script>
+
+<!-- Global setup for jquery's unobtrusive validation -->
+<script type="text/javascript">
+    $.validator.setDefaults({
+        //ignore nothing while validating - necessary when using libraries like slim-select overrides/hides input elements
+        ignore: []
+    });
+</script>
+
+<!-- Below script is to globally override settings of datatable when initializing new datatable.
+    These settings will get override again if they are specified when creating a new datatable.-->
+<script type="text/javascript">
+    $.extend(true, $.fn.dataTable.defaults, {
+        bPaginate: true,
+        bFilter: true,
+        bInfo: true,
+        bSort: true,
+        lengthChange: false,
+        scrollCollapse: true,
+        bDestroy: true,
+        scrollX: true
+    });
+</script>
+
+<script type="text/javascript">
+    window.toastr.options = {
+        "positionClass": "toast-bottom-right",
+        "preventDuplicates": true,
+        "closeButton": true,
+        "progressBar": true,
+        "timeOut": "3000",
+        "newestOnTop": false   // 👈 new toasts appear below older ones
+    };
+</script>
+
+@if (null != TempData["AlertMessage"] && null != TempData["AlertType"])
+{
+    var alertType = TempData["AlertType"]!;
+    var alertMessage = TempData["AlertMessage"];
+
+    <script type="text/javascript">
+        $(document).ready(() =>{
+            window.toastr["@alertType"]("@alertMessage");
+        })
+    </script>
+}
+
+<!-- Script related to dropdown menus (i.e. to open and close dropdown menu items)-->
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+      // Toggle nested submenus on click
+      document.querySelectorAll('.dropdown-submenu > a.dropdown-toggle')
+        .forEach(function (el) {
+          el.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const submenu = el.nextElementSibling;
+            if (!submenu) return;
+
+            // Close any open sibling submenus
+            const parentMenu = el.closest('.dropdown-menu');
+            parentMenu.querySelectorAll('.dropdown-menu.show').forEach(function (openMenu) {
+              if (openMenu !== submenu) openMenu.classList.remove('show');
+            });
+
+            submenu.classList.toggle('show');
+            el.setAttribute('aria-expanded', submenu.classList.contains('show') ? 'true' : 'false');
+          });
+        });
+
+      // When the top-level dropdown closes, close all submenus
+      document.querySelectorAll('.dropdown').forEach(function (dd) {
+        dd.addEventListener('hide.bs.dropdown', function () {
+          this.querySelectorAll('.dropdown-menu.show').forEach(function (submenu) {
+            submenu.classList.remove('show');
+          });
+          this.querySelectorAll('.dropdown-submenu > a[aria-expanded="true"]').forEach(function (t) {
+            t.setAttribute('aria-expanded', 'false');
+          });
+        });
+      });
+    });
+</script type="text/javascript">
+
+@* <!-- Scripts required for marquee effect for display message -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const el = document.querySelector('.scroll-container');
+      if (!el) return;
+      el.style.setProperty('--marquee-width', el.clientWidth + 'px');
+      // Optional: keep in sync on resize
+      window.addEventListener('resize', () =>
+        el.style.setProperty('--marquee-width', el.clientWidth + 'px')
+      );
+    }); 
+</script>*@
+
+<!-- Fix for dropdown on hover getting out of screen-->
+<script>
+document.querySelectorAll('.nav-item.dropdown').forEach(function (dropdown) {
+    const toggle = dropdown.querySelector('[data-bs-toggle="dropdown"]');
+    const bsDropdown = bootstrap.Dropdown.getOrCreateInstance(toggle);
+
+    // Hover opens/closes dropdown
+    dropdown.addEventListener('mouseenter', () => bsDropdown.show());
+    dropdown.addEventListener('mouseleave', () => bsDropdown.hide());
+
+    // Disable click behavior
+    toggle.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+    });
+});
+</script>
+
+<!-- Global options setting for ag-grid-->
+<script type="text/javascript">
+    agGrid.provideGlobalGridOptions({
+        suppressContextMenu: true, // disables right-click menu globally
+        suppressDragLeaveHidesColumns: true,
+        domLayout: 'autoHeight', // ✅ Important for auto height
+        // Enable Pagination
+        pagination: true,
+        paginationPageSize: 10,
+        paginationPageSizeSelector: [5, 10, 20],
+        // Optional: Allow user to change page size dynamically
+        paginationAutoPageSize: false,
+        singleClickEdit: true,
+        stopEditingWhenCellsLoseFocus: true,
+    });
+</script>
+
+<!-- Global options setting for flatpickr -->
+<script type="text/javascript">
+    flatpickr.defaultConfig = {
+        dateFormat: "Y-m-d",    // ISO for backend
+        allowInput: false,     // only select from calendar, no manual typing
+        altInput: true,
+        altFormat: "d/M/Y",    // visible format
+        altInputClass: "form-control flatpickr-input",
+    };
+</script>
+
+

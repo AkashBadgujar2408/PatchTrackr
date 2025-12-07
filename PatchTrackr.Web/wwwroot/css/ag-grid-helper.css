@@ -1,0 +1,55 @@
+﻿
+/* Main theme override for ag-grid */
+.ag-theme-alpine {
+    --ag-font-family: "Montserrat", BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", serif;
+    --ag-header-foreground-color: #595959;
+    --ag-header-font-size: 14px;
+    --ag-header-font-weight: 700;
+    --ag-odd-row-background-color: #f2f0f0;
+}
+
+.ag-header-row, .ag-header-row-column {
+    background: #6EA77A;
+    color: white;
+}
+
+.ag-btn-toggle.btn-success.active {
+    box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.5); /* Bootstrap Green */
+}
+
+.ag-btn-toggle.btn-danger.active {
+    box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.5); /* Bootstrap Red */
+}
+
+/* Add vertical and horizontal borders */
+.ag-cell {
+    border-right: 1px solid #ccc;
+}
+
+.ag-row {
+    border-bottom: 1px solid #ccc;
+}
+
+.ag-root-wrapper {
+    border: 1px solid #ccc; /* Outer border */
+}
+
+.ag-custom-checkbox {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    margin: auto;
+    margin-top: 10px;
+    display: block;
+    accent-color: #0d6efd; /* Bootstrap primary blue color */
+}
+
+.ag-header-cell-label{
+    justify-content: center;
+}
+
+.ag-number-field-input{
+    text-align: right;
+    padding-right: 15px;
+}
+

@@ -1,0 +1,93 @@
+
+.app-body {
+    font-family: 'Inter', sans-serif;
+}
+
+.app-footer {
+    background-color: #dae8f1;
+}
+
+.dropdown-menu {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    /*overflow: hidden;*/ /* Prevent hover background from bleeding outside */
+    padding: 0; /* Remove extra padding so hover is aligned */
+}
+
+    .dropdown-menu .dropdown-item {
+        border-radius: 0; /* Reset default Bootstrap radius on items */
+        padding: 10px 16px;
+        font-weight: 500;
+        transition: background 0.3s ease;
+    }
+
+        .dropdown-menu .dropdown-item:first-child {
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        .dropdown-menu .dropdown-item:last-child {
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+
+        .dropdown-menu .dropdown-item:hover {
+            background-color: #EFF6FF; /* light blue */
+            color: #2563EB;
+        }
+
+/* Position nested dropdowns to the right of their parent */
+.dropdown-submenu {
+    position: relative;
+}
+
+    .dropdown-submenu > .dropdown-menu {
+        top: 0;
+        left: 100%; /* push to the right */
+        margin-top: -1px;
+        margin-left: .1rem; /* optional spacing */
+    }
+
+.navbar .navbar-nav .nav-link {
+    color: white;
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
+}
+
+/*.navbar .dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;*/ /* Align dropdown properly */
+/*}*/
+
+/* Keep the hover open when inside menu */
+.navbar .dropdown-menu {
+    margin-top: 0;
+}
+
+.navbar .navbar-nav .nav-link {
+    color: #FFFFFF !important;
+    font-weight: 500;
+    padding: 8px 16px;
+    transition: background 0.3s ease;
+}
+
+    .navbar .navbar-nav .nav-link:hover {
+        background-color: #138496;
+        border-radius: 6px;
+    }
+
+.btn-link.dropdown-item {
+    color: #2563EB;
+    font-weight: 500;
+}
+
+    .img-avatar:hover {
+        transform: scale(1.1);
+    }
+
+.page-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0.3rem;
+    color: #0644c1;
+}

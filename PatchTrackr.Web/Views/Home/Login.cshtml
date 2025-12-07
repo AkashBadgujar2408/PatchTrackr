@@ -1,0 +1,114 @@
+﻿@model LoginDTO
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <link rel="icon" href="~/images/logo_32x32.png" type="image/x-icon" sizes="32x32" />
+    <link rel="manifest" href="~/json/manifest.json" asp-append-version="true">
+    <meta name="theme-color" content="#007bff">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+    <title>PatchTrackr</title>
+
+    <partial name="_CssPartial" />
+    <link href="~/css/LoginPage.css" rel="stylesheet" asp-append-version="true" />
+
+    <partial name="_ScriptsPartial" />
+
+    <script src="~/js/responsiveslides.min.js" type="text/javascript"></script>
+
+</head>
+<body class="loginbg">
+    <section class="vh-100">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col col-xl-10">
+                    <div class="card" style="border-radius: 1rem;">
+                        <div class="row g-0">
+                            <div class="col-md-6 col-lg-5 d-none d-md-block">
+                                <img src="~/images/login_professional.png"
+                                     alt="Patch Trackr Login" class="img-fluid" style="border-radius: 1rem 0 0 1rem;" />
+                            </div>
+                            <div class="col-md-6 col-lg-7 d-flex align-items-center">
+                                <div class="card-body p-4 p-lg-5 text-black">
+                                    <form asp-action="Login" method="post" id="formLogin">
+                                        @Html.AntiForgeryToken()
+                                        <input asp-for="ReturnUrl" type="hidden" value="@ViewBag.ReturnUrl" />
+                                        <div class="d-flex align-items-center mb-3 pb-1">
+                                            <img src="~/images/logo.png" style="max-height: 100px; width: auto;" />
+                                        </div>
+
+                                        <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your account</h5>
+
+                                        <div data-mdb-input-init class="form-outline mb-4">
+                                            <input asp-for="Username" placeholder="Username" class="form-control form-control-lg" />
+                                        </div>
+
+                                        <div data-mdb-input-init class="form-outline mb-4">
+                                            <input asp-for="Password" placeholder="Password" class="form-control form-control-lg" />
+                                        </div>
+
+                                        <div class="pt-1 mb-4">
+                                            <button data-mdb-button-init data-mdb-ripple-init class="btn btn-dark btn-lg btn-block" type="submit">Login</button>
+                                        </div>
+
+                                        <a class="text-muted" href="sendPasswordMail()">Forgot password?</a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script type="text/javascript">
+        function sendPasswordMail(){
+            var username = $("#Username").val();
+
+            if (!username){
+                window.toastr.error("Please type User ID.");
+                return;
+            }
+
+            $.ajax({
+                url: "@Url.Action("SendPasswordMail", "Home")",
+                type: "POST",
+                data: { username: username },
+                success: function (response){
+                    if (response.message){
+                        if (response.success){
+                            window.toastr.success(response.message);
+                        }
+                        else {
+                                Swal.fire({
+                                  icon: 'error',
+                                  title: 'Oops...',
+                                  text: response.message,
+                                  customClass: {
+                                  confirmButton: 'btn btn-danger'  // Apply Bootstrap class
+                                  },
+                                  buttonsStyling: false  // Important: disables SweetAlert2's default styling
+                                  })
+                        }
+                    }
+                    else {
+                        window.toastr.error("An error occurred while sending password mail.");
+                    }
+                },
+                error: function (error){
+                    window.toastr.error("An error occurred while sending password mail.");
+                }
+            });
+        }
+    </script>
+</body>
+</html>

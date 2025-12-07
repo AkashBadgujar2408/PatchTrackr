@@ -1,49 +1,99 @@
-﻿<!DOCTYPE html>
+﻿@{
+    string userName = CommonService.GetLoggedInUserName();
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" href="~/images/logo_32x32.png" type="image/x-icon" sizes="32x32" />
+    <link rel="manifest" href="~/json/manifest.json" asp-append-version="true">
+    <meta name="theme-color" content="#007bff">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - PatchTrackr.Web</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/PatchTrackr.Web.styles.css" asp-append-version="true" />
+    <title>Milestone Management</title>
+    <partial name="_CssPartial" />
+    <link rel="stylesheet" href="~/css/layout.css" asp-append-version="true" />
+    <partial name="_ScriptsPartial" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PatchTrackr.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+<body class="app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show">
+    <header class="app-header navbar">
+        <button class="navbar-toggler sidebar-toggler d-lg-none" type="button" data-toggle="sidebar-show">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="javascript: void(0);">
+            <img src="~/images/logo.png" alt="Logo" style="height:50px;" class="company-logo me-2" />
+        </a>
+        <button class="navbar-toggler sidebar-toggler d-md-down-none" type="button" data-toggle="sidebar-lg-show">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <ul class="nav navbar-nav ml-auto">
+            <a class="nav-link" asp-controller="Dashboard" asp-action="Index"><i class="fa-solid fa-house-user fs-3 text-black"></i></a>
+            <li class="nav-item dropdown">
+                <a class="nav-link" data-bs-toggle="dropdown" href="javascript: void(0);" role="button" aria-haspopup="true" aria-expanded="false">
+                    <img class="img-avatar" src="~/images/user-avatar.png" alt="User">
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <ul class="nav navbar-nav mx-3 my-3">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <img class="img-avatar" src="~/images/user-avatar.png" alt="User" width="90" height="90">
+                            @{
+                                <span>Welcome&nbsp;@userName</span>
+                            }
                         </li>
                     </ul>
+                    <form asp-controller="Home" asp-action="Logout" method="post" class="dropdown-item m-0 p-0">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-link dropdown-item">
+                            <i class="fa fa-lock"></i>&nbsp;Logout
+                        </button>
+                    </form>
                 </div>
-            </div>
-        </nav>
+            </li>
+        </ul>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+
+    <div class="app-body">
+
+        <div class="sidebar">
+            <nav class="sidebar-nav">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Users" asp-action="Manage">
+                            Manage Users
+                        </a>
+                    </li>
+                    @* @foreach (var userForm in userForms)
+                    {
+                        <partial name="_MenuNodePartial" model="userForm" />
+                    } *@
+                </ul>
+            </nav>
+        </div>
+
+        <main class="main">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - PatchTrackr.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="app-footer">
+        <div class="container text-center py-2">
+            <a href="javascript: void(0);" target="_blank" rel="noopener noreferrer">Akash Badgujar & Co.</a>
+            <span>&copy; @DateTime.Today.Year</span>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+
+    @{
+        await RenderSectionAsync("Scripts", required: false);
+    }
+
+    <!-- Script for auto log-out on session expiry -->
+    <script type="text/javascript">
+        $(document).ajaxError(function (event, xhr) {
+            if (xhr.status === 401) {
+                event.stopImmediatePropagation();
+                window.location.href = "@Url.Action("Login", "Home")";
+            }
+        });
+    </script>
 </body>
 </html>

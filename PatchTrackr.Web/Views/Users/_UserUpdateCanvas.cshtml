@@ -1,0 +1,60 @@
+﻿@model UserDTO
+
+<div class="offcanvas offcanvas-end w-50" tabindex="-1" id="userMasterCanvas">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title box-title">Add/Update User</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="card">
+            <div class="card-body">
+                <form id="userUpdateForm" method="post">
+                    <input asp-for="UserId" type="hidden" />
+                    <div class="row mb-2">
+                        <div class="col-md-6">
+                            <label class="fw-bold" asp-for="UserName"></label>
+                            <input class="form-control" placeholder="User Name" asp-for="UserName" />
+                            <span asp-validation-for="UserName"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="fw-bold" asp-for="FullName"></label>
+                            <input class="form-control" placeholder="Full Name" asp-for="FullName" />
+                            <span asp-validation-for="FullName"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-6">
+                            <label class="fw-bold" asp-for="Email"></label>
+                            <input class="form-control" placeholder="Email" asp-for="Email" />
+                            <span asp-validation-for="Email"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="fw-bold" asp-for="PhoneNo"></label>
+                            <input type="number" class="form-control" placeholder="Phone No." asp-for="PhoneNo" />
+                            <span asp-validation-for="PhoneNo"></span>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-6">
+                            <label class="fw-bold" asp-for="Password"></label>
+                            <input class="form-control" placeholder="Password" asp-for="Password" />
+                            <span asp-validation-for="Password"></span>
+                        </div>
+                        <div class="col-md-6 justify-content-center align-items-center mt-4 d-none" id="activeYNDiv">
+                            <div class="form-check form-switch">
+                                <input asp-for="IsActive" class="form-check-input fs-5" type="checkbox" checked />
+                                <label class="form-check-label fw-bold col-form-label">Active</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-end">
+                        <button type="button" onclick="saveUserInfo()" class="btn btn-success px-4"><i class="fa fa-save"></i>&nbsp;Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

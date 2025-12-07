@@ -1,2 +1,9 @@
 ﻿@using PatchTrackr.Web
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, PatchTrackr.Core
+@using PatchTrackr.Core.DTOs
+@using PatchTrackr.Core.Models
+@using PatchTrackr.Core.ServiceContracts
+@using PatchTrackr.Core.Services
+
+@inject ICommonService CommonService

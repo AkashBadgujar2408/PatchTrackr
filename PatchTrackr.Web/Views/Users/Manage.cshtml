@@ -1,0 +1,150 @@
+﻿@model List<MUser>
+
+<div class="card card-outline-warning m-2">
+    <div class="card-header">
+        <div class="card-title d-flex justify-content-between align-items-center mb-0">
+            <span>
+                <label class="page-title">@ViewBag.Title</label>
+            </span>
+            <div class="d-flex align-items-center gap-2">
+                    <a href="javascript: openAddNewUserCanvas()" title="Add User"><i class="fa fa-circle-plus fs-2"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div id="usersGrid" class="ag-theme-alpine" style="max-height: 550px; overflow-y:auto;"></div>
+    </div>
+</div>
+
+<partial name="_UserUpdateCanvas" model="new UserDTO()" />
+
+@section Scripts {
+    <script type="text/javascript">
+        var usersListJson = @Html.GetRawJson(Model);
+        let gridApi;
+
+		const gridOptions = {
+			rowData: usersListJson,
+			columnDefs: [
+				{
+					field: "UserName",
+					headerName: "User Name",
+					filter: 'agTextColumnFilter',
+					flex: 1,
+					pinned: 'left',
+					cellRenderer: (params) => {
+						return true
+						? `<a href="javascript: openUpdateUserCanvas('${params.value}')">${params.value}</a>`
+						: params.value;
+					}
+				},
+				{ field: "FullName", headerName: "Full Name",filter: 'agTextColumnFilter', flex: 1, pinned: 'left'},
+				{ field: "PhoneNo", headerName: "Contact No",filter: 'agTextColumnFilter', flex: 1,	pinned: 'left', cellClass: 'text-right' },
+				{ field: "Email", headerName: "Email",filter: 'agTextColumnFilter', flex: 2 },
+				{
+					field: "IsActive",
+					headerName: "Active",
+					width: 150,
+					filter: cStatusFilter,
+					cellClass: 'text-center',
+					cellRenderer: (params) => {
+						return params.value
+							? `<i class="fa fa-check text-green"></i>`
+							: `<i class="fa fa-times text-red"></i>`;
+					}
+				}
+			],
+			onGridReady: (params) => {
+				gridApi = params.api;
+				paginationComp = updatePaginationControls(gridApi);
+				$('span.ag-paging-page-summary-panel[role="presentation"]').empty().append(paginationComp);
+			},
+			onPaginationChanged: () => {
+				paginationComp = updatePaginationControls(gridApi);
+				$('span.ag-paging-page-summary-panel[role="presentation"]').empty().append(paginationComp);
+			}
+		};
+
+		const myGridElement = document.querySelector('#usersGrid');
+		gridApi = agGrid.createGrid(myGridElement, gridOptions);
+
+		function openAddNewUserCanvas(){
+			var userId = $("#UserId").val();
+			if (!isNaN(userId) && Number(userId) > 0){
+				var form = $("#userUpdateForm");
+				form[0].reset();
+				form.validate().resetForm();
+				$(".field-validation-valid").html("");
+				$("#UserId").val('');
+				$("#IsActive").prop('checked', true);
+				$("#activeYNDiv").removeClass('d-flex').addClass('d-none');
+				$("#UserName").prop('readonly', false);
+			}
+			$('#userMasterCanvas').offcanvas('show');
+		}
+
+		function openUpdateUserCanvas(userName){
+			$.ajax({
+					url: "@Url.Action("GetUserInfo", "Users")",
+					type: "GET",
+					data: { userName: userName },
+					success: function (user){
+						var form = $("#userUpdateForm");
+						form[0].reset();
+						form.validate().resetForm();
+						$(".field-validation-valid").html("");
+						$("#UserId").val(user.UserId);
+						$("#UserName").prop('readonly', true).val(user.UserName);
+						$("#FullName").val(user.FullName);
+						$("#Email").val(user.Email);
+						$("#PhoneNo").val(user.PhoneNo);
+						$("#Password").val(user.Password);
+						$("#IsActive").prop('checked', user.IsActive);
+						$("#activeYNDiv").addClass('d-flex').removeClass('d-none');
+						$('#userMasterCanvas').offcanvas('show');
+					},
+					error: function (error){
+						window.toastr.error("An internal server error occurred while trying to fetch user's information for editing.");
+					}
+				})
+		}
+
+		function saveUserInfo(){
+			var isValid = $("#userUpdateForm").valid();
+			if (!isValid) return;
+
+			$.ajax({
+				url: "@Url.Action("SaveUserInfo", "Users")",
+				type: "POST",
+				data: $("#userUpdateForm").serialize(),
+				success: function (response){
+							if (response.success){
+								reloadUsersGrid();
+								window.toastr.success(response.message);
+								$('#userMasterCanvas').offcanvas('hide');
+							}
+							else {
+								window.toastr.error(response.message);
+							}
+				},
+				error: function (error){
+					window.toastr.error("An internal server error occurred while saving user information.");
+				}
+			})
+		}
+
+		function reloadUsersGrid(){
+			$.ajax({
+				url: "@Url.Action("GetUsers", "Users")",
+				type: "GET",
+				success: function (users){
+					usersListJson = users;
+					gridApi.setGridOption("rowData", usersListJson);
+				},
+				error: function (error){
+					window.toastr.error("Failed to re-bind the users grid. Please reload the page to see the changes.");
+				}
+			})
+		}
+    </script>
+}

@@ -1,0 +1,6 @@
+
+*!IMPORTANT: DO NOT CHANGE Project and StartupProject below!*
+
+Use the following command to scaffold AppDbContext:
+
+Scaffold-DbContext “Server=(localdb)\MSSQLLocalDB;Database=PatchTrackr;TrustServerCertificate=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Context AppDbContext -force -NoOnConfiguring -Project PatchTrackr.Core -StartupProject PatchTrackr.Core
